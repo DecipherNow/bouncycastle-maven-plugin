@@ -22,7 +22,7 @@
 
     <groupId>com.deciphernow</groupId>
     <artifactId>bouncycastle-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Bouncy Castle Maven Plugin</name>
@@ -70,6 +70,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <version.bouncycastle>1.56</version.bouncycastle>
+        <version.bouncycastle.plugin>1.0.0</version.bouncycastle.plugin>
         <version.checkstyle.plugin>2.17</version.checkstyle.plugin>
         <version.compiler.plugin>3.6.1</version.compiler.plugin>
         <version.failsafe.plugin>${version.surefire.plugin}</version.failsafe.plugin>
