@@ -195,6 +195,26 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <cloneProjectsTo>${project.build.directory}/it/projects</cloneProjectsTo>
+                    <localRepositoryPath>${project.build.directory}/it/repository</localRepositoryPath>
+                    <invokerPropertiesFile>invoker.properties</invokerPropertiesFile>
+                    <postBuildHookScript>assertions.bsh</postBuildHookScript>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>install</goal>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${version.jacoco.plugin}</version>
