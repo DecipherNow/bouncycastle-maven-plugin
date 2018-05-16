@@ -1,0 +1,5 @@
+<settingsSecurity>
+    <!-- https://maven.apache.org/guides/mini/guide-encryption.html -->
+    <!-- encrypted value = password -->
+    <master>{rEKOc2JcqYQHnV4pfZslyn+BKl1pnUDYez1iAMI2JvI=}</master>
+</settingsSecurity>

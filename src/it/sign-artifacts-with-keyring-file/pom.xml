@@ -25,9 +25,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sign-artifacts-with-passphase-from-maven-settings</artifactId>
+    <artifactId>sign-artifacts-with-keyring-file</artifactId>
     <packaging>jar</packaging>
-    <description>Check if passphrase can be obtain from a server defined in maven settings</description>
+    <description>Check if artifacts can be signed with a keyring read from a file</description>
 
     <build>
         <plugins>
@@ -36,8 +36,8 @@
                 <artifactId>bouncycastle-maven-plugin</artifactId>
                 <version>@project.version@</version>
                 <configuration>
-                    <passphraseServerId>gpg.passphrase</passphraseServerId>
-                    <rings>${rings}</rings>
+                    <passphrase>latrommI</passphrase>
+                    <secretKeyring>@project.build.testOutputDirectory@/com/deciphernow/maven/plugins/bouncycastle/keys.asc</secretKeyring>
                     <userId>immortal@deciphernow.com</userId>
                 </configuration>
                 <executions>
@@ -46,23 +46,6 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <configuration>
-                    <forceCreation>true</forceCreation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>

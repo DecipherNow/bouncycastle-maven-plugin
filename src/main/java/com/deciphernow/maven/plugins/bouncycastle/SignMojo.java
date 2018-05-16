@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +56,11 @@ import java.util.List;
 @Mojo(name = "sign", defaultPhase = LifecyclePhase.VERIFY)
 public class SignMojo extends AbstractMojo {
 
-  @Parameter(property = "rings", required = true)
+  @Parameter(property = "rings")
   private String rings;
+
+  @Parameter(property = "secretKeyring")
+  private File secretKeyring;
 
   @Parameter(property = "passphrase")
   private String passphrase;
@@ -89,7 +94,11 @@ public class SignMojo extends AbstractMojo {
     ensureMojoConfigurationIsValid();
 
     if (passphraseServerId != null) {
-      passphrase = getPassphraseFromServerInMavenSettings();
+      passphrase = getPassphraseFromMavenSettings();
+    }
+
+    if (secretKeyring != null) {
+      rings = getKeyringFromFile();
     }
 
     try (InputStream inputStream = new ByteArrayInputStream(this.rings.getBytes(StandardCharsets.UTF_8))) {
@@ -161,18 +170,38 @@ public class SignMojo extends AbstractMojo {
     return new SignedArtifact("pom.asc", null, signatureFile);
   }
 
-  private String getPassphraseFromServerInMavenSettings() throws MojoFailureException {
+  private String getPassphraseFromMavenSettings() throws MojoFailureException {
+
+    Server server = settings.getServer(passphraseServerId);
+    String value = server.getPassphrase();
+
+    if (value == null) {
+      throw new MojoFailureException("Unable to find passphrase in server " + passphraseServerId);
+    }
+
     try {
-      Server server = settings.getServer(passphraseServerId);
-      return securityDispatcher.decrypt(server.getPassphrase());
+      return securityDispatcher.decrypt(value);
     } catch (SecDispatcherException e) {
-      throw new MojoFailureException("Unable to obtain passphrase from serverId " + passphraseServerId, e);
+      throw new MojoFailureException("Unable to decode the passphrase of server " + passphraseServerId, e);
+    }
+  }
+
+  private String getKeyringFromFile() throws MojoFailureException {
+    try {
+      byte[] encoded = Files.readAllBytes(Paths.get(secretKeyring.getPath()));
+      return new String(encoded);
+    } catch (IOException e) {
+      throw new MojoFailureException("Unable to read keyring file " + secretKeyring, e);
     }
   }
 
   private void ensureMojoConfigurationIsValid() throws MojoFailureException {
     if (passphrase == null && passphraseServerId == null) {
       throw new MojoFailureException("'passphrase' or 'passphraseServerId' property is missing");
+    }
+
+    if (rings == null && secretKeyring == null) {
+      throw new MojoFailureException("'rings' or 'secretKeyring' property is missing");
     }
   }
 
