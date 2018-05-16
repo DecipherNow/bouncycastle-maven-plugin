@@ -114,6 +114,11 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${version.bouncycastle}</version>
         </dependency>
+        <dependency>
+            <groupId>org.sonatype.plexus</groupId>
+            <artifactId>plexus-sec-dispatcher</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -199,6 +204,7 @@
                 <artifactId>maven-invoker-plugin</artifactId>
                 <version>3.0.1</version>
                 <configuration>
+                    <settingsFile>src/it/settings.xml</settingsFile>
                     <cloneProjectsTo>${project.build.directory}/it/projects</cloneProjectsTo>
                     <localRepositoryPath>${project.build.directory}/it/repository</localRepositoryPath>
                     <invokerPropertiesFile>invoker.properties</invokerPropertiesFile>

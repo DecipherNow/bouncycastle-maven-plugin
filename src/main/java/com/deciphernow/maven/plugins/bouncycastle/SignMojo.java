@@ -28,10 +28,14 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
+import org.apache.maven.settings.Server;
+import org.apache.maven.settings.Settings;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPSecretKey;
 import org.bouncycastle.openpgp.PGPSecretKeyRingCollection;
 import org.codehaus.plexus.util.FileUtils;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
+import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -53,8 +57,11 @@ public class SignMojo extends AbstractMojo {
   @Parameter(property = "rings", required = true)
   private String rings;
 
-  @Parameter(property = "passphrase", required = true)
+  @Parameter(property = "passphrase")
   private String passphrase;
+
+  @Parameter(property = "passphraseServerId")
+  private String passphraseServerId;
 
   @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject project;
@@ -65,6 +72,12 @@ public class SignMojo extends AbstractMojo {
   @Component
   private MavenProjectHelper projectHelper;
 
+  @Parameter(defaultValue = "${settings}", readonly = true, required = true)
+  private Settings settings;
+
+  @Component(role = org.sonatype.plexus.components.sec.dispatcher.SecDispatcher.class, hint = "default")
+  private SecDispatcher securityDispatcher;
+
   /**
    * Creates a detached signature file for all of the artifacts in this project.
    *
@@ -72,6 +85,13 @@ public class SignMojo extends AbstractMojo {
    * @throws MojoFailureException if an expected error occurs
    */
   public void execute() throws MojoExecutionException, MojoFailureException {
+
+    ensureMojoConfigurationIsValid();
+
+    if (passphraseServerId != null) {
+      passphrase = getPassphraseFromServerInMavenSettings();
+    }
+
     try (InputStream inputStream = new ByteArrayInputStream(this.rings.getBytes(StandardCharsets.UTF_8))) {
       PGPSecretKeyRingCollection rings = Utils.loadSecretKeyRings(inputStream);
       PGPSecretKey key = Utils.find(this.userId, rings);
@@ -139,6 +159,21 @@ public class SignMojo extends AbstractMojo {
     FileUtils.copyFile(project.getFile(), pomFile);
     sign(pomFile, signatureFile, key);
     return new SignedArtifact("pom.asc", null, signatureFile);
+  }
+
+  private String getPassphraseFromServerInMavenSettings() throws MojoFailureException {
+    try {
+      Server server = settings.getServer(passphraseServerId);
+      return securityDispatcher.decrypt(server.getPassphrase());
+    } catch (SecDispatcherException e) {
+      throw new MojoFailureException("Unable to obtain passphrase from serverId " + passphraseServerId, e);
+    }
+  }
+
+  private void ensureMojoConfigurationIsValid() throws MojoFailureException {
+    if (passphrase == null && passphraseServerId == null) {
+      throw new MojoFailureException("'passphrase' or 'passphraseServerId' property is missing");
+    }
   }
 
   private class SignedArtifact {
