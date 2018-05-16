@@ -21,7 +21,8 @@
     <servers>
         <server>
             <id>gpg.passphrase</id>
-            <passphrase>latrommI</passphrase>
+            <!-- encrypted value = 'latrommI' which has been encrypted with master password in settings-security.xml -->
+            <passphrase>{GKCQ6/UrkHQHV4Av6jqZUmU8fS7Z5li3v7n5EYG0TH8=}</passphrase>
         </server>
     </servers>
 

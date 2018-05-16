@@ -209,6 +209,7 @@
                     <localRepositoryPath>${project.build.directory}/it/repository</localRepositoryPath>
                     <invokerPropertiesFile>invoker.properties</invokerPropertiesFile>
                     <postBuildHookScript>assertions.bsh</postBuildHookScript>
+                    <showErrors>true</showErrors>
                 </configuration>
                 <executions>
                     <execution>
