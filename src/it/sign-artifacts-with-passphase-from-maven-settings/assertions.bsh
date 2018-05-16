@@ -16,12 +16,12 @@
 
 import java.io.*;
 
-File artifactDir = new File(localRepositoryPath, "com/deciphernow/bouncycastle-maven-plugin-sign-artifacts-it/1.0.0");
+File artifactDir = new File(localRepositoryPath, "it/sign-artifacts-with-passphase-from-maven-settings/1.0.0");
 
 String[] ascFiles = {
-        "bouncycastle-maven-plugin-sign-artifacts-it-1.0.0.pom.asc",
-        "bouncycastle-maven-plugin-sign-artifacts-it-1.0.0.jar.asc",
-        "bouncycastle-maven-plugin-sign-artifacts-it-1.0.0-sources.jar.asc",
+        "sign-artifacts-with-passphase-from-maven-settings-1.0.0.pom.asc",
+        "sign-artifacts-with-passphase-from-maven-settings-1.0.0.jar.asc",
+        "sign-artifacts-with-passphase-from-maven-settings-1.0.0-sources.jar.asc",
 };
 
 for (String ascFile : ascFiles) {

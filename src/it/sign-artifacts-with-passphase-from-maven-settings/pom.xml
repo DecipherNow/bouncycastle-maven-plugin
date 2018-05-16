@@ -18,39 +18,19 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.deciphernow</groupId>
-    <artifactId>bouncycastle-maven-plugin-sign-artifacts-it</artifactId>
-    <version>1.0.0</version>
+    <parent>
+        <groupId>it</groupId>
+        <artifactId>common</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>sign-artifacts-with-passphase-from-maven-settings</artifactId>
     <packaging>jar</packaging>
-    <description>Check if project and attached artifacts are signed and installed</description>
+    <description>Check if passphrase can be obtain from a server defined in maven settings</description>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.gmaven</groupId>
-                <artifactId>groovy-maven-plugin</artifactId>
-                <version>2.0</version>
-                <executions>
-                    <execution>
-                        <id>create-ring-property-with-private-key-content</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <properties>
-                                <keysFile>
-                                    @project.basedir@/src/test/resources/com/deciphernow/maven/plugins/bouncycastle/keys.asc
-                                </keysFile>
-                            </properties>
-                            <source>
-                                def privateKey = new File(properties['keysFile']).getText()
-                                project.properties.rings = privateKey
-                            </source>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>com.deciphernow</groupId>
                 <artifactId>bouncycastle-maven-plugin</artifactId>
