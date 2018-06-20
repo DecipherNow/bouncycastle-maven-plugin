@@ -5,15 +5,19 @@ jobs:
       - image: circleci/openjdk:8
     steps:
       - checkout
+      - run: mvn clean compile
   test:
+    docker:
+      - image: circleci/openjdk:8
+    steps:
+      - checkout
+  deploy:
     docker:
       - image: circleci/openjdk:8
     steps:
       - checkout
       - run: mvn verify
       - run: if [ -z "${CI_PULL_REQUEST}" ]; then PGP_RINGS="$(echo ${PGP_RINGS_ENCODED} | base64 --decode)" mvn deploy -P deploy -s settings.xml; fi
-
-
 dependencies:
     pre:
         - mvn dependency:go-offline
