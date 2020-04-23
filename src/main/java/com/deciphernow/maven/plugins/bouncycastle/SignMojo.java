@@ -150,10 +150,9 @@ public class SignMojo extends AbstractMojo {
     for (Object object : this.project.getAttachedArtifacts()) {
       Artifact artifact = (Artifact) object;
       File signatureFile = signArtifact(artifact, key);
-      ArtifactHandler artifactHandler = artifact.getArtifactHandler();
       signedArtifacts.add(new SignedArtifact(
-              String.format("%s.asc", artifactHandler.getExtension()),
-              artifactHandler.getClassifier(),
+              String.format("%s.asc", artifact.getArtifactHandler().getExtension()),
+              artifact.getClassifier(),
               signatureFile));
     }
     return signedArtifacts;
