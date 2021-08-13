@@ -69,7 +69,7 @@
         <maven.test.runOrder>hourly</maven.test.runOrder>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.bouncycastle>1.56</version.bouncycastle>
+        <version.bouncycastle>1.67</version.bouncycastle>
         <version.bouncycastle.plugin>1.0.0</version.bouncycastle.plugin>
         <version.checkstyle.plugin>2.17</version.checkstyle.plugin>
         <version.compiler.plugin>3.6.1</version.compiler.plugin>
